@@ -26,6 +26,10 @@ var parseFiles = function(files, cb) {
   });
 };
 
+/*
+test si une ligne est eligible pour real debrid.
+renvoie vrai pour eligible, faux sinon.
+*/
 var testReal = function(str) {
 	if(str.charAt(str.length-1) == "/")
 		str = str.substring(0, str.length - 1);
@@ -34,7 +38,7 @@ var testReal = function(str) {
 	   console.log('lastFive : ',lastFive);
 	   console.log('lastFive search point : ',lastFive.search("."));
 	
-	if(lastFive.search(".") < 1 )
+	if(lastFive.search(".") < 1 ) // on cherche si il y a un point dans les 5 derniers charactères.
 		return true ;
 	else{
 		if(lastFive.search(".com") < 0 && lastFive.search(".html") < 0 && lastFive.search(".net") < 0 && lastFive.search(".org") < 0)
@@ -85,22 +89,19 @@ angular
             if (fsettings[i].val != self.fsettings[i].val)
                 settings[i] = self.fsettings[i].val;
           }
-          
-			console.log("urls avant : ",self.uris);
-			if (testReal(self.uris) == true)
-				self.realD(function(result) {
-					console.log("real debrid actif");
-					console.log("urls après : ",result.toString().replace(/,/g, '\n'));
-					
-					self.uris = result.toString().replace(/,/g, '\n');				
-					self.cb(self.parse(), settings);
-				});					
-			else{
-				console.log("pas de real debrid");
-				self.cb(self.parse(), settings);
-			}	
+    
+	if (testReal(self.uris) == true)
+		self.realD(function(result) {
+			console.log("real debrid actif");
+			self.uris = result.toString().replace(/,/g, '\n');				
+			self.cb(self.parse(), settings);
+		});					
+	else{
+		console.log("pas de real debrid");
+		self.cb(self.parse(), settings);
+	}	
 			
-        }
+       }
       },
       function() {
         delete self.inst;
