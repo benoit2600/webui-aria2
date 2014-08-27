@@ -411,6 +411,12 @@ angular.module('webui.services.settings', [])
     options: ["get", "tunnel"]
   },
 
+ "real-debrid": {
+    desc: "utiliser real-debrid ?",
+    val: false,
+    options: ["true", "false"],
+  },
+  
   "realtime-chunk-checksum": {
     desc: "Validate chunk of data by calculating checksum while downloading a file if chunk checksums are provided. Default: true",
     val: true,

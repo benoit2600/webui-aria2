@@ -661,7 +661,6 @@ http://ex1.com/f2.mp4 http://ex2.com/f2.mp4
           <div class="form-horizontal control-group modal-advanced-options">
             <div ng-repeat="(name, set) in getUris.settings">
               <label class="control-label">{{name}}</label>
-
               <div class="controls">
                 <select ng-show="set.options.length" ng-options="opt for opt in set.options" ng-model="set.val">
                 </select>

@@ -8,8 +8,8 @@ angular
   encrypt: false,
   auth: {                          // either add the token field or the user and pass field, not both.
   // token: '$YOUR_SECRET_ATOKEN$',
-  // user: '*YOUR_USERNAME*',
-  // pass: '*YOUR_SECRET_PASS*',
+   //user: 'benoit2600',
+   //pass: 'prout',
   }
 })
 .constant('$enable', {
@@ -34,7 +34,7 @@ angular
 ])
 .constant('$downloadProps', [ // Similar to starred Quick Access properties but for adding new downloads.
   // go to Advance Download Options when adding a new download to view the list of possible options
-  'pause', 'dir', 'max-connection-per-server'
+  'pause', 'dir', 'max-connection-per-server', 'real-debrid'
 ])
 .constant('$globalTimeout', 1000)  // interval to update the individual downloads
 ;

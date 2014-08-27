@@ -9,6 +9,8 @@ var parseFiles = function(files, cb) {
       cb(txts);
     }
   };
+  
+ 
   _.each(files, function(file) {
     cnt++;
     console.log('starting file reader');
@@ -24,6 +26,23 @@ var parseFiles = function(files, cb) {
   });
 };
 
+var testReal = function(str) {
+	if(str.charAt(str.length-1) == "/")
+		str = str.substring(0, str.length - 1);
+		
+	var lastFive = str.substr(str.length - 5); 
+	   console.log('lastFive : ',lastFive);
+	   console.log('lastFive search point : ',lastFive.search("."));
+	
+	if(lastFive.search(".") < 1 )
+		return true ;
+	else{
+		if(lastFive.search(".com") < 0 && lastFive.search(".html") < 0 && lastFive.search(".net") < 0 && lastFive.search(".org") < 0)
+			return false ;
+		else
+			return true ;
+	}
+};
 angular
 .module('webui.ctrls.modal', [
   "ui.bootstrap", 'webui.services.deps', 'webui.services.modals', 'webui.services.rpc',
@@ -66,16 +85,41 @@ angular
             if (fsettings[i].val != self.fsettings[i].val)
                 settings[i] = self.fsettings[i].val;
           }
-
-          console.log('sending settings:', settings);
-          self.cb(self.parse(), settings);
+          
+			console.log("urls avant : ",self.uris);
+			if (testReal(self.uris) == true)
+				self.realD(function(result) {
+					console.log("real debrid actif");
+					console.log("urls après : ",result.toString().replace(/,/g, '\n'));
+					
+					self.uris = result.toString().replace(/,/g, '\n');				
+					self.cb(self.parse(), settings);
+				});					
+			else{
+				console.log("pas de real debrid");
+				self.cb(self.parse(), settings);
+			}	
+			
         }
       },
       function() {
         delete self.inst;
       });
     },
+     
+    realD: function(callback) {
+		lala = _.chain(this.uris.trim().split(/\r?\n/g)).map(function(d) { return d.trim().split(/\s+/g) }).filter(function(d) { return d.length }).value();
+		var r = new XMLHttpRequest();
+		r.open('POST', 'test.php?url='+lala, true); 			
+		
+		r.onreadystatechange = function() {
+			if(r.readyState != 4 || r.status != 200) return;
+				callback(JSON.parse(r.responseText));
+		};
+		r.send();
+    },
     parse: function() {
+	console.log('URL :', this);
       return _
         .chain(this.uris.trim().split(/\r?\n/g))
         .map(function(d) { return d.trim().split(/\s+/g) })
